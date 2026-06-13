@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'controllers/app_controller.dart';
 import 'controllers/language_controller.dart';
+import 'controllers/auth_controller.dart';
 import 'routes/app_routes.dart';
 import 'utils/app_theme.dart';
 
@@ -12,6 +13,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => AppController()),
         ChangeNotifierProvider(create: (_) => LanguageController()),
+        ChangeNotifierProvider(create: (_) => AuthController()),
       ],
       child: const PeopleIssueReportingApp(),
     ),

@@ -64,7 +64,7 @@ class LanguageSelectionScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, AppRoutes.home);
+                  Navigator.pushReplacementNamed(context, AppRoutes.login);
                 },
                 child: const Text('Continue'),
               ),
