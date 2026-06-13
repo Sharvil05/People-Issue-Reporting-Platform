@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'controllers/app_controller.dart';
+import 'controllers/language_controller.dart';
 import 'routes/app_routes.dart';
 import 'utils/app_theme.dart';
 
@@ -10,7 +11,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppController()),
-        // Add more providers here as the app grows
+        ChangeNotifierProvider(create: (_) => LanguageController()),
       ],
       child: const PeopleIssueReportingApp(),
     ),
