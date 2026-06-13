@@ -1,35 +1,32 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
+import '../services/firebase_service.dart';
 
 class AuthController extends ChangeNotifier {
+  final FirebaseService _firebaseService = FirebaseService();
   UserModel? _currentUser;
   bool _isLoading = false;
 
   UserModel? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
 
-  Future<bool> login(String email, String password) async {
+  Future<String?> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
-
-    // Simulate login delay
-    await Future.delayed(const Duration(seconds: 2));
-
-    // Dummy logic for now
-    _currentUser = UserModel(
-      id: '1',
-      name: 'Test User',
-      email: email,
-      phone: '1234567890',
-      role: UserRole.citizen,
-    );
-
-    _isLoading = false;
-    notifyListeners();
-    return true;
+    try {
+      final credential = await _firebaseService.login(email, password);
+      _currentUser = await _firebaseService.getUser(credential.user!.uid);
+      _isLoading = false;
+      notifyListeners();
+      return null; // Success
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return e.toString();
+    }
   }
 
-  Future<bool> signup({
+  Future<String?> signup({
     required String name,
     required String email,
     required String phone,
@@ -38,35 +35,45 @@ class AuthController extends ChangeNotifier {
   }) async {
     _isLoading = true;
     notifyListeners();
-
-    // Simulate signup delay
-    await Future.delayed(const Duration(seconds: 2));
-
-    _currentUser = UserModel(
-      id: '2',
-      name: name,
-      email: email,
-      phone: phone,
-      role: role,
-    );
-
-    _isLoading = false;
-    notifyListeners();
-    return true;
+    try {
+      final credential = await _firebaseService.signUp(email, password);
+      final newUser = UserModel(
+        id: credential.user!.uid,
+        name: name,
+        email: email,
+        phone: phone,
+        role: role,
+      );
+      await _firebaseService.saveUser(newUser);
+      _currentUser = newUser;
+      _isLoading = false;
+      notifyListeners();
+      return null; // Success
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return e.toString();
+    }
   }
 
   Future<void> logout() async {
+    await _firebaseService.signOut();
     _currentUser = null;
     notifyListeners();
   }
 
-  Future<void> sendPasswordResetEmail(String email) async {
+  Future<String?> sendPasswordResetEmail(String email) async {
     _isLoading = true;
     notifyListeners();
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    _isLoading = false;
-    notifyListeners();
+    try {
+      await _firebaseService.resetPassword(email);
+      _isLoading = false;
+      notifyListeners();
+      return null;
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return e.toString();
+    }
   }
 }

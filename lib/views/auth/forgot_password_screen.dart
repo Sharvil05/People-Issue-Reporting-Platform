@@ -22,13 +22,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   void _handleSubmit() async {
     if (_formKey.currentState!.validate()) {
       final authController = Provider.of<AuthController>(context, listen: false);
-      await authController.sendPasswordResetEmail(_emailController.text.trim());
+      final error = await authController.sendPasswordResetEmail(_emailController.text.trim());
       
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password reset email sent!')),
-        );
-        Navigator.pop(context);
+        if (error == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Password reset email sent!'), backgroundColor: Colors.green),
+          );
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error), backgroundColor: Colors.red),
+          );
+        }
       }
     }
   }

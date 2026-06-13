@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:people_issue_reporting_platform_/models/user_model.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/auth_controller.dart';
 import '../../routes/app_routes.dart';
@@ -26,13 +27,24 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       final authController = Provider.of<AuthController>(context, listen: false);
-      final success = await authController.login(
+      final error = await authController.login(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
-      if (success && mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      if (mounted) {
+        if (error == null) {
+          final role = authController.currentUser?.role;
+          if (role == UserRole.admin) {
+            Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+          } else {
+            Navigator.pushReplacementNamed(context, AppRoutes.citizenDashboard);
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error), backgroundColor: Colors.red),
+          );
+        }
       }
     }
   }

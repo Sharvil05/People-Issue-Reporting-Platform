@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "784609965949",
+    "project_id": "pirp-9fb14",
+    "storage_bucket": "pirp-9fb14.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784609965949:android:f0b467a446e9f9b0c2fe14",
+        "android_client_info": {
+          "package_name": "com.example.people_issue_reporting_platform_"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUfckVKH5zVAN2HjU9XNixmUM5-jNjWFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

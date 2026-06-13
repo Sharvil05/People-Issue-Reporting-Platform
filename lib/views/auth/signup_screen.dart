@@ -31,7 +31,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void _handleSignup() async {
     if (_formKey.currentState!.validate()) {
       final authController = Provider.of<AuthController>(context, listen: false);
-      final success = await authController.signup(
+      final error = await authController.signup(
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
         phone: _phoneController.text.trim(),
@@ -39,8 +39,18 @@ class _SignupScreenState extends State<SignupScreen> {
         role: _selectedRole,
       );
 
-      if (success && mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      if (mounted) {
+        if (error == null) {
+          if (_selectedRole == UserRole.admin) {
+            Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+          } else {
+            Navigator.pushReplacementNamed(context, AppRoutes.citizenDashboard);
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error), backgroundColor: Colors.red),
+          );
+        }
       }
     }
   }
